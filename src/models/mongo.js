@@ -36,8 +36,31 @@ class Model {
 
   getByDateRange(startDate, endDate) {
     //right now only querying objects with dateStart that fits into range, need to also query for objects whose dateEnd also fits into the range
+    // let queryObject = { 
+    //   "dateStart": { $gte: startDate, $lt: endDate },
+    //   "dateEnd": { $gte: startDate, $lt: endDate }
+    // };
+    /*
+    $eq equal (=).
+    $gt greater than >.
+    $gte greater or equal than (>=).
+    $lt less than (<).
+    */
 
-    let queryObject = { "dateStart": { $gte: startDate, $lt: endDate } };
+    let queryObject = {
+      $or: [
+        { "dateStart": { $gte: startDate, $lt: endDate } },
+        { "dateEnd": { $gte: startDate, $lt: endDate } }
+      ]
+    }
+    //  like in a hotel, users should be able to schedule their start date the same
+    //day another user leaves. right now, it only works one way
+
+    //  if you schedule to leave the day that another person is arriving, then 
+    //it (correctly) doesn't see a conflict.
+    //  however, if a user schedules to arrive on the same day that another person
+    //is leaving, then it has a conflict.
+
     return this.schema.find(queryObject);
   }
 
