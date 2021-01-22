@@ -82,9 +82,10 @@ function handleGetOne(request, response, next) {
 function handleGetAvailableSites(request, response, next) {
   request.model.getByDateRange(request.query.startDate, request.query.endDate)
     .then(data => {
+      let sites = data.map(record => record.site)
       const output = {
-        count: data.length,
-        results: data,
+        // count: data.length,
+        results: sites,
       };
       response.status(200).json(output);
     })
