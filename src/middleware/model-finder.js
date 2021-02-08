@@ -10,6 +10,8 @@ const models = requireDirectory(module, '../models', { rename: renamer, include:
 const list = () => Object.keys(models).filter((model) => model !== "model");
 
 const finder = (req, res, next) => {
+  // console.log('in model-finder')
+  // console.log(req.params);
 
   try {
     let modelName = req.params.model.replace(/[^a-z0-9-_]/gi, '');
@@ -21,3 +23,4 @@ const finder = (req, res, next) => {
 };
 
 module.exports = { finder, list };
+
