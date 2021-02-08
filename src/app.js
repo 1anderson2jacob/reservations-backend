@@ -11,6 +11,7 @@ const cwd = process.cwd();
 const express = require('express');
 const cors = require('cors');
 const morgan = require('morgan');
+// const bodyParser = require('body-parser');
 
 // Esoteric Resources
 const errorHandler = require(`${cwd}/src/middleware/500.js`);
@@ -24,7 +25,19 @@ const app = express();
 app.use(cors());
 app.use(morgan('dev'));
 
-app.use(express.json());
+function excludeSomePaths(fn) {
+  return function (req, res, next) {
+    if (req.path === '/payment-status') {
+      next();
+    } else {
+      fn(req, res, next);
+    }
+    // if (req.path !== '/payment-status') {
+    //   fn(req, res, next);
+    // }
+  }
+}
+app.use(excludeSomePaths(express.json()));
 app.use(express.urlencoded({ extended: true }));
 
 // Static Routes

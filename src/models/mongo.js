@@ -35,11 +35,6 @@ class Model {
   }
 
   getByDateRange(startDate, endDate) {
-    //right now only querying objects with dateStart that fits into range, need to also query for objects whose dateEnd also fits into the range
-    // let queryObject = { 
-    //   "dateStart": { $gte: startDate, $lt: endDate },
-    //   "dateEnd": { $gte: startDate, $lt: endDate }
-    // };
     /*
     $eq equal (=).
     $gt greater than >.
