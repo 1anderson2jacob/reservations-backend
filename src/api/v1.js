@@ -223,6 +223,7 @@ function handlePaymentStatus(request, response, next) {
       if (intent.payment_status === 'paid') {
         checkoutSessionCompleted(intent);
       }
+      response.sendStatus(200);
       break;
   }
 
