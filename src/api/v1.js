@@ -158,10 +158,10 @@ async function handleCheckout(request, response, next) {
   const TAX_RATE_ID = process.env.TAX_RATE_ID;
   const DAILY_PRICE = process.env.DAILY_PRICE;
   const WEEKLY_PRICE = process.env.WEEKLY_PRICE;
-  const MONTHLY_PRICE = process.env.MONTLY_PRICE;
+  const MONTHLY_PRICE = process.env.MONTHLY_PRICE;
 
   const totalDays = request.body.totalDays;
-  let reservationText = `Reservations at PackwoodRV Park and Campground from ${request.body.dateStart} to ${request.body.dateEnd}`;
+  let reservationText = `Reservations at Packwood RV Park and Campground from ${request.body.dateStart} to ${request.body.dateEnd}`;
 
   let price = '';
   if (totalDays < 8) {
@@ -223,7 +223,7 @@ function handlePaymentStatus(request, response, next) {
       if (intent.payment_status === 'paid') {
         checkoutSessionCompleted(intent);
       }
-      response.sendStatus(200);
+      // response.sendStatus(200);
       break;
   }
 

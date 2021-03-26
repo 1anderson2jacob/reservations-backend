@@ -8,6 +8,7 @@ const mongooseOptions = {
   useNewUrlParser: true,
   useCreateIndex: true,
 };
+
 mongoose.connect(process.env.MONGODB_URI, mongooseOptions);
 db.once('open', _ => {
   console.log('Database connected: ', process.env.MONGODB_URI);
