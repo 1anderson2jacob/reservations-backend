@@ -18,8 +18,18 @@ const errorHandler = require(`${cwd}/src/middleware/500.js`);
 const notFound = require(`${cwd}/src/middleware/404.js`);
 const v1Router = require(`${cwd}/src/api/v1.js`);
 
+//adminBro
+const adminBro = require(`${cwd}/src/admin/router.js`)
+// const AdminBro = require('admin-bro');
+// const AdminBroMongoose = require('@admin-bro/mongoose');
+
+// AdminBro.registerAdapter(AdminBroMongoose);
+
 // Prepare the express app
 const app = express();
+
+//adminBro 
+app.use(adminBro.adminBro.options.rootPath, adminBro.router)
 
 // App Level MW
 app.use(cors());
