@@ -18,18 +18,17 @@ const errorHandler = require(`${cwd}/src/middleware/500.js`);
 const notFound = require(`${cwd}/src/middleware/404.js`);
 const v1Router = require(`${cwd}/src/api/v1.js`);
 
+//stripe
+const stripeRouter = require(`${cwd}/src/stripe/router.js`)
+
 //adminBro
 const adminBro = require(`${cwd}/src/admin/router.js`)
-// const AdminBro = require('admin-bro');
-// const AdminBroMongoose = require('@admin-bro/mongoose');
-
-// AdminBro.registerAdapter(AdminBroMongoose);
 
 // Prepare the express app
 const app = express();
 
 //adminBro 
-app.use(adminBro.adminBro.options.rootPath, adminBro.router)
+app.use(adminBro.adminBro.options.rootPath, adminBro.router);
 
 // App Level MW
 app.use(cors());
@@ -37,7 +36,7 @@ app.use(morgan('dev'));
 
 function excludeSomePaths(fn) {
   return function (req, res, next) {
-    if (req.path === '/payment-status') {
+    if (req.path === '/stripe/payment-status') {
       next();
     } else {
       fn(req, res, next);
@@ -55,6 +54,7 @@ app.use(express.urlencoded({ extended: true }));
 
 // Routes
 app.use(v1Router);
+app.use (stripeRouter);
 
 // Catchalls
 app.use(notFound);
