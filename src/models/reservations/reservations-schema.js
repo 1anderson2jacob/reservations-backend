@@ -7,7 +7,7 @@ const reservations = mongoose.Schema({
   name: { type: String, required: true },
   email: { type: String, required: true },
   address: { type: String },
-  date: { type: Date, required: true, default: Date.now },
+  date: { type: Date, required: false, default: Date.now },
   dateStart: { type: Date, required: true },
   dateEnd: { type: Date, required: true },
   siteNumber: { type: Number, required: true },
