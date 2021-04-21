@@ -73,22 +73,22 @@ const AdminBroOptions = {
 
 
 const adminBro = new AdminBro(AdminBroOptions)
-// const router = AdminBroExpress.buildRouter(adminBro);
+const router = AdminBroExpress.buildRouter(adminBro);
 
 // Build and use a router which will handle all AdminBro routes
-const router = AdminBroExpress.buildAuthenticatedRouter(adminBro, {
-  authenticate: async (email, password) => {
-    const user = await Users.findOne({ email })
-    if (user) {
-      const matched = await bcrypt.compare(password, user.encryptedPassword)
-      if (matched) {
-        return user
-      }
-    }
-    return false
-  },
-  cookiePassword: 'some-secret-password-used-to-secure-cookie',
-})
+// const router = AdminBroExpress.buildAuthenticatedRouter(adminBro, {
+//   authenticate: async (email, password) => {
+//     const user = await Users.findOne({ email })
+//     if (user) {
+//       const matched = await bcrypt.compare(password, user.encryptedPassword)
+//       if (matched) {
+//         return user
+//       }
+//     }
+//     return false
+//   },
+//   cookiePassword: 'some-secret-password-used-to-secure-cookie',
+// })
 
 module.exports = {
   adminBro,
