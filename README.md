@@ -7,9 +7,9 @@
 4. In another terminal, go to reservations backend server directory and run `npm start`
 
 ### Todo before 4/21
-- [ ] Add login credentials to adminbro and create user accounts for me, Steven, and whatshername
+- [x] Add login credentials to adminbro and create user accounts for me, Steven, and Donna
 - [ ] Put dropdown of available sites in adminbro 'add reservation' functionality instead of a textbox
-- [ ] Remove current date selector from adminbro for making reservations
+- [x] Remove current date selector from adminbro for making reservations
 - [ ] * Add field for cash accepted for admin-made reservations
 
 ### Todo general
