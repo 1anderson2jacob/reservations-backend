@@ -1,33 +1,27 @@
 const cwd = process.cwd();
-// AdminBro
 const AdminBro = require('admin-bro');
 const AdminBroExpress = require('@admin-bro/express');
 const AdminBroMongoose = require('@admin-bro/mongoose');
-const bcrypt = require('bcrypt');
+const bcrypt = require('bcrypt'); 
+
 AdminBro.registerAdapter(AdminBroMongoose);
 
 const Reservations = require(`${cwd}/src/models/reservations/reservations-schema.js`);
 const Users = require(`${cwd}/src/admin/users.js`);
 
 // Roled based access functions
-// const canModifyUsers = ({ currentAdmin }) => currentAdmin && currentAdmin.role === 'admin'
+const canModifyUsers = ({ currentAdmin }) => currentAdmin && currentAdmin.role === 'admin'
 // const canModifyReservations
 
 const AdminBroOptions = {
   resources: [
     { resource: Reservations,
       options: { 
-        properties: {
-          // siteNumber: {
-          //   components: {
-
-          //   }
-          // }
-        },
-        listProperties: ['email', 'name', 'address', 'dateStart', 'dateEnd', 'siteNumber'],
+        listProperties: ['email', 'name', 'address', 'dateStart', 'dateEnd', 'siteNumber', 'siteType'],
+        filterProperties: ['email', 'name', 'address', 'dateStart', 'dateEnd', 'siteNumber', 'siteType'],
         actions: {
           new: {
-            layout: ['email', 'name', 'address', 'dateStart', 'dateEnd', 'siteNumber'],
+            layout: ['email', 'name', 'address', 'dateStart', 'dateEnd', 'siteNumber', 'siteType'],
           },
         }
       } 
@@ -47,6 +41,7 @@ const AdminBroOptions = {
         },
         actions: {
           new: {
+            isAccessible: canModifyUsers,
             before: async (request) => {
               if(request.payload.password) {
                 request.payload = {
@@ -58,22 +53,30 @@ const AdminBroOptions = {
               return request
             },
           },
-          // edit: { isAccessible: canModifyUsers },
-          // delete: { isAccessible: canModifyUsers },
+          edit: { isAccessible: canModifyUsers },
+          delete: { isAccessible: canModifyUsers },
+          bulkDelete: { isAccessible: canModifyUsers },
           // new: { isAccessible: canModifyUsers },
         }
       }
     }
   ],
-  rootPath: '/admin',
-  branding: {    companyName: 'Packwood RV',
+  // rootPath: '/admin',
+  branding: {    
+    companyName: 'Packwood RV',
+    logo: false,
+    softwareBrothers: false,
   },
-
+  dashboard: {
+    handler: async () => {
+      // return { some: 'chicken' }
+    },
+    component: AdminBro.bundle('./components/dashboard')
+  },
 }
 
 
-const adminBro = new AdminBro(AdminBroOptions)
-// const router = AdminBroExpress.buildRouter(adminBro);
+const adminBro = new AdminBro(AdminBroOptions);
 
 // Build and use a router which will handle all AdminBro routes
 const router = AdminBroExpress.buildAuthenticatedRouter(adminBro, {
