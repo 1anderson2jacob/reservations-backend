@@ -2,7 +2,7 @@ const express = require('express');
 const router = express.Router();
 const bodyParser = require('body-parser');
 const stripe = require('stripe')(process.env.STRIPE_SECRET_API_KEY);
-const FRONTEND_URL = 'http://localhost:8080';
+const FRONTEND_URL = 'http://packwoodrv.com';
 
 
 // API Routes
@@ -13,7 +13,7 @@ router.post('/stripe/payment-status', bodyParser.raw({ type: 'application/json' 
 
 // Route Handlers
 async function handleGetPrices(request, response, next) {
-    console.log('in handleGetPrices')
+    //console.log('in handleGetPrices')
     const prices = await stripe.prices.list()
 
     const pricesObj = {
@@ -30,7 +30,7 @@ async function handleGetPrices(request, response, next) {
 }
   
 async function handleCheckout(request, response, next) {
-    console.log('in handleCheckout');
+    //console.log('in handleCheckout');
     const TAX_RATE_ID = process.env.TAX_RATE_ID;
     const DAILY_PRICE = process.env.DAILY_PRICE;
     const WEEKLY_PRICE = process.env.WEEKLY_PRICE;
@@ -73,14 +73,14 @@ async function handleCheckout(request, response, next) {
         },
     ],
     mode: 'payment',
-    success_url: `${FRONTEND_URL}/success.html`,
+    success_url: `${FRONTEND_URL}/success.html?session_id={CHECKOUT_SESSION_ID}`,
     cancel_url: `${FRONTEND_URL}`,
     });
     response.json({ id: session.id });
 }
   
-function handlePaymentStatus(request, response, next) {
-    console.log('in handlePaymentStatus')
+async function handlePaymentStatus(request, response, next) {
+    // console.log('in handlePaymentStatus')
     const endpointSecret = process.env.STRIPE_ENPOINT_SECRET;
     const sig = request.headers['stripe-signature'];
     const body = request.body;
@@ -98,18 +98,21 @@ function handlePaymentStatus(request, response, next) {
         case 'checkout.session.completed':
         intent = event.data.object;
         if (intent.payment_status === 'paid') {
-            checkoutSessionCompleted(intent);
+            // console.log('intent.payment_status === paid')
+            checkoutSessionCompleted(intent, request, response)
+            return;
         }
-        // response.sendStatus(200);
+
         break;
     }
 
+    //if    
     response.sendStatus(200);
 }
-  
-async function checkoutSessionCompleted(obj) {
-    console.log('in checkoutSessionComplete')
-    console.log("Checkout session completed:", obj.id);
+
+async function checkoutSessionCompleted(obj, req, res) {
+    // console.log('in checkoutSessionComplete')
+    // console.log("Checkout session completed:", obj.id);
     const customer = await stripe.customers.retrieve(obj.customer);
     const payment_intent = await stripe.paymentIntents.retrieve(obj.payment_intent,
       {
@@ -125,7 +128,9 @@ async function checkoutSessionCompleted(obj) {
       siteType: obj.metadata.siteType,
     }
     let model = require(`../models/reservations/reservations-model.js`);
-    model.post(record);
+    return model.post(record)
+    .then(result => res.sendStatus(200))
+    .catch(error => res.status(500).send(error)) // try a redirect
 }
   
 module.exports = router;
