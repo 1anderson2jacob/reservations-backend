@@ -41,11 +41,9 @@ function excludeSomePaths(fn) {
     } else {
       fn(req, res, next);
     }
-    // if (req.path !== '/payment-status') {
-    //   fn(req, res, next);
-    // }
   }
 }
+
 app.use(excludeSomePaths(express.json()));
 app.use(express.urlencoded({ extended: true }));
 
@@ -54,10 +52,10 @@ app.use(express.urlencoded({ extended: true }));
 
 // Routes
 app.use(v1Router);
-app.use (stripeRouter);
+app.use(stripeRouter);
 
 // Catchalls
-app.use(notFound);
+app.use('*', notFound);
 app.use(errorHandler);
 
 /**

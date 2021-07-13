@@ -18,7 +18,7 @@ class Model {
    * @returns {*}
    */
   jsonSchema() {
-    console.log(typeof this.schema.jsonSchema);
+    // console.log(typeof this.schema.jsonSchema);
     return typeof this.schema.jsonSchema === 'function'
       ? this.schema.jsonSchema()
       : {};
@@ -32,6 +32,10 @@ class Model {
   get(_id) {
     let queryObject = _id ? { _id } : {};
     return this.schema.find(queryObject);
+    // this.schema.find(queryObject, (err, result) => {
+    //   if (err) { console.log(err) }
+    //   return result;
+    // })
   }
 
   getByDateRange(startDate, endDate) {

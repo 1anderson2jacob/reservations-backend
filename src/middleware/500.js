@@ -13,6 +13,6 @@
  * @param next {function} Express middleware next()
  */
 module.exports = (err, req, res, next) => {
-  let error = { error: err };
+  let error = {error: err};
   res.status(500).json(error).end();
 };
