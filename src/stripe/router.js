@@ -30,7 +30,7 @@ async function handleGetPrices(request, response, next) {
 }
   
 async function handleCheckout(request, response, next) {
-    //console.log('in handleCheckout');
+    console.log('in handleCheckout');
     const TAX_RATE_ID = process.env.TAX_RATE_ID;
     const DAILY_PRICE = process.env.DAILY_PRICE;
     const WEEKLY_PRICE = process.env.WEEKLY_PRICE;
@@ -80,7 +80,7 @@ async function handleCheckout(request, response, next) {
 }
   
 async function handlePaymentStatus(request, response, next) {
-    // console.log('in handlePaymentStatus')
+    console.log('in handlePaymentStatus')
     const endpointSecret = process.env.STRIPE_ENPOINT_SECRET;
     const sig = request.headers['stripe-signature'];
     const body = request.body;
@@ -98,21 +98,20 @@ async function handlePaymentStatus(request, response, next) {
         case 'checkout.session.completed':
         intent = event.data.object;
         if (intent.payment_status === 'paid') {
-            // console.log('intent.payment_status === paid')
+            console.log('intent.payment_status === paid')
             checkoutSessionCompleted(intent, request, response)
             return;
         }
 
         break;
     }
-
-    //if    
+  
     response.sendStatus(200);
 }
 
 async function checkoutSessionCompleted(obj, req, res) {
-    // console.log('in checkoutSessionComplete')
-    // console.log("Checkout session completed:", obj.id);
+    console.log('in checkoutSessionComplete')
+    console.log("Checkout session completed:", obj.id);
     const customer = await stripe.customers.retrieve(obj.customer);
     const payment_intent = await stripe.paymentIntents.retrieve(obj.payment_intent,
       {
@@ -120,12 +119,13 @@ async function checkoutSessionCompleted(obj, req, res) {
       });
     const customerName = payment_intent.payment_method.billing_details.name;
     let record = {
-      name: customerName,
-      email: obj.customer_details.email,
-      dateStart: obj.metadata.dateStart,
-      dateEnd: obj.metadata.dateEnd,
-      siteNumber: obj.metadata.siteNumber,
-      siteType: obj.metadata.siteType,
+        session_id: obj.id,
+        name: customerName,
+        email: obj.customer_details.email,
+        dateStart: obj.metadata.dateStart,
+        dateEnd: obj.metadata.dateEnd,
+        siteNumber: obj.metadata.siteNumber,
+        siteType: obj.metadata.siteType,
     }
     let model = require(`../models/reservations/reservations-model.js`);
     return model.post(record)

@@ -5,6 +5,7 @@ require('mongoose-schema-jsonschema')(mongoose);
 
 const year = 31536000; //in milliseconds
 const reservations = mongoose.Schema({
+  session_id: { type: String, required: false},
   name: { type: String, required: true },
   email: { type: String, required: true },
   address: { type: String },
