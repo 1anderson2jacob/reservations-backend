@@ -30,12 +30,13 @@ class Model {
    * @returns {*}
    */
   get(_id) {
-    let queryObject = _id ? { _id } : {};
+    let queryObject = {}
+    // find using id, or session_id
+    if (_id) {
+      queryObject = _id.length < 25 ? { _id } : { session_id: _id }
+    }
+
     return this.schema.find(queryObject);
-    // this.schema.find(queryObject, (err, result) => {
-    //   if (err) { console.log(err) }
-    //   return result;
-    // })
   }
 
   getByDateRange(startDate, endDate) {
