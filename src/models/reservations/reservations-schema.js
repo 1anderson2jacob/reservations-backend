@@ -9,6 +9,17 @@ const reservations = mongoose.Schema({
   name: { type: String, required: true },
   email: { type: String, required: true },
   address: { type: String },
+  phone: {
+    type: String,
+    validate: {
+      validator: function(v) {
+        return /\d{3}-\d{3}-\d{4}/.test(v);
+        // ^(\+\d{1,2}\s)?\(?\d{3}\)?[\s.-]?\d{3}[\s.-]?\d{4}$
+      },
+      message: props => `${props.value} is not a valid phone number!`
+    },
+    required: false
+  },
   date: { type: Date, required: false, default: Date.now },
   dateStart: { type: Date, min: Date.now, required: true },
   dateEnd: { type: Date, max: () => new Date(+new Date() + 365*24*60*60*1000), required: true },
