@@ -12,7 +12,7 @@ const Users = require(`${cwd}/src/admin/users.js`);
 // Roled based access functions
 const canModifyUsers = ({ currentAdmin }) => currentAdmin && currentAdmin.role === 'admin'
 // const canModifyReservations
-const reservationProps = ['name', 'email', 'phone', 'address', 'dateStart', 'dateEnd', 'siteNumber', 'siteType']
+const reservationProps = ['name', 'email', 'phone', 'address', 'dateStart', 'dateEnd', 'siteNumber', 'siteType'];
 
 const AdminBroOptions = {
   resources: [
@@ -24,6 +24,9 @@ const AdminBroOptions = {
           new: {
             layout: reservationProps,
           },
+          edit: {
+            layout: reservationProps,
+          }
         }
       } 
     },
